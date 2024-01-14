@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <title>Uploading and deleting pictures with rich text in Summernote on the server and using emojis</title>
+
+   <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+   <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+   <script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.js"></script>
+   <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.css" rel="stylesheet">
+   <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.js"></script>
+   <script type="text/javascript" src="./lang/summernote-zh-CN.js"></script>
+
+
+   <style type="text/css">
+     body{
+       padding: 100px;
+     
+     }
+   </style>
+
+</head>
+<body>
+<h1 style="color: blue;text-align: center;">summernote rich text editor</h1>
+     <div id="summernote"></div>
+     <button id="submit" class="btn btn-info" >Submit</button>
+
+</body>
+
+<script type="text/javascript">
+     //Calling rich text editing
+     $(document).ready(function() {
+
+       var $summernote = $('#summernote').summernote({
+         height: 300,
+         minHeight: null,
+         maxHeight: null,
+         focus: true,
+         lang: 'zh-CN', //summernote-zh-CN.js must be added before it can be used
+         placeholder: "1. Enter text here; 2. Insert pictures and save them to the server; 3. Use the keyboard clear key to delete pictures on the server; 4. You can add emojis",
+
+      
+         //Call image upload
+         callbacks: {
+
+             onImageUpload: function (files) {
+                 sendFile($summernote, files[0]);
+             },
+           }
+     });
+
+     //ajax upload pictures
+     function sendFile($summernote, file) {
+
+         var formData = new FormData();
+         formData.append("file", file);
+
+         $.ajax({
+             url: "server.php",//
+             data: formData,
+             type: 'POST',
+
+             //If the submitted data is of FormData type, then the following three sentences must be added
+             cache: false,
+             contentType: false,
+             processData: false,
+            
+
+             success: function (data) {
+               $('#summernote').summernote('insertImage', data); //Just insert the path directly, filename is optional
+               console.log(data);
+             },
+
+             error:function(){
+               alert("Failed to upload image!");
+             }
+         });
+     }
+
+             // prefixed in earlier versions of Firefox and Chrome
+     var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+
+     //The following code must be constructed in var $summernote = $('#summernote').summernote() before it has class = note-editable, otherwise an error will be reported if used directly.
+     //
+     //Select target node
+     var target = document.querySelector('.note-editable');
+     //Create observer object
+     var observer = new MutationObserver(function(mutations){ //Callback function of the observation object
+
+       console.log(mutations);
+
+       mutations.forEach(function(mutation) //forEach: Traverse all MutationRecord
+       {
+         console.log(mutation);
+         console.log(mutation.type); //MutationRecord.type
+         console.log(mutation.oldValue); // Note that mutation.type is childList, so oldValue cannot be used to obtain the value
+         if(mutation.addedNodes[0]!=null){
+           console.log(mutation.addedNodes);
+            console.log(mutation.addedNodes[0]);
+            console.log(mutation.addedNodes[0].src);
+           if(mutation.addedNodes[0].tagName == "IMG")
+             console.log("Successfully added an img");
+        }
+
+          if(mutation.removedNodes[0]!=null)
+         {
+
+            console.log(mutation.removedNodes);
+
+            if(mutation.removedNodes[0].tagName == "IMG")
+            {
+
+               var href = location.href; //Current path
+               console.log(href);
+
+               href = href.substring(0,href.lastIndexOf("/")+1);
+               console.log(href);
+
+               var imgSrc =mutation.removedNodes[0].src;
+               imgSrc = imgSrc.replace(href,''); //A stupid way to separate relative paths
+
+               $.ajax({
+                  type: "POST",
+                  url: "delete.php", //php file in the same directory
+                  data:{imgSrc:imgSrc},
+                  success: function(msg){ alert(msg); } //Callback function after successful request
+                });
+             }
+         }
+
+       });
+
+     });
+
+     //Configure observation options:
+     var config = { attributes: true, childList: true, characterData: true ,subtree:true};
+
+     // Pass in the target node and observation options
+     observer.observe(target, config);
+
+
+     });
+
+
+     $("#submit").click(function () {
+         var content = $('#summernote').summernote('code');
+        
+
+          $.ajax({
+             url: "submit.php",
+             data: {content:content},
+             type: 'POST',
+             success: function (data) {
+
+               alert('Writing to txt file successfully!');
+               //alert(data);
+             },
+
+             error:function(){
+               alert("Submission failed!");
+             }
+         });
+
+     })
+
+
+</script>
+
+</html>

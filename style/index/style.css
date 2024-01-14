@@ -1,0 +1,121 @@
+.col-lg-6 {
+    padding: 10px;
+    vertical-align: middle;
+}
+.row-cols-lg-5 .d-flex .justify-content-center .align-items-center {
+    --widgets-spacing: 20px;
+}
+p{
+    color: #7A7A7A;
+}
+.card {
+    position: relative;
+}
+
+.card-img-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    padding: 1rem;
+}
+span.text-overlay {
+    position: absolute;
+    top: auto;
+    right: 0;
+    left: 0;
+    width: 100%;
+    bottom: 0;
+    text-align: center;
+    background-color: #f5ba62;
+    padding: 10px;
+    color: #7d2837;
+    font-family: "Poppins", Sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+h2 {
+    color: #7d2837;
+    font-family: "Montserrat", Sans-serif;
+    font-size: 38px;
+}
+
+.card-title.text-center {
+    margin-bottom: 20px;
+}
+
+body {
+    font-family: "Poppins", Sans-serif;
+    text-align: center;
+    margin: 50px;
+}
+
+#calendar {
+    max-width: 600px;
+    margin: auto;
+}
+
+#header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+#calendar-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#calendar-table th, #calendar-table td {
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+#prev-month, #next-month {
+    cursor: pointer;
+    font-size: 18px;
+    color: #007bff;
+}
+
+#current-month {
+    font-size: 20px;
+}
+span.text {
+    font-family: "Poppins", Sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+}
+li.p-3 {
+    list-style: none;
+}
+
+p {
+    text-align: justify;
+    font-family: "Poppins", Sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+}
+section.bg-image.justify-content-center {
+    background-image: url(https://ublcces.talimdev.com/wp-content/uploads/2023/01/326263616_594636842467628_6515332566026589763_n.jpg);
+    background-position: center left;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+@media (min-width: 1025px){
+section.bg-image.justify-content-center {
+    background-attachment: fixed;
+}
+}
+.bg-img {
+    min-height: 390px;
+}
+
+h2#text {
+    color: white;
+    font-family: "Montserrat", Sans-serif;
+    font-size: 38px;
+}
